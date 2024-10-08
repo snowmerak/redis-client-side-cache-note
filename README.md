@@ -1,0 +1,1 @@
+# redis-client-side-cache-note
