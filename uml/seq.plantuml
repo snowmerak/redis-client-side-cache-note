@@ -1,0 +1,59 @@
+@startuml sequence
+
+skinparam dpi 500
+
+participant "ClientA" as C1
+participant "ClientB" as C2
+collections "Redis" as R
+
+group normal flow
+    C1 -> R: set(key, value)
+    C2 -> R: get(key)
+    R -> C2: value
+end
+
+newpage
+
+participant "ClientA" as C1
+participant "ClientB" as C2
+collections "Redis" as R
+
+group server assisted client side cache is used
+    C1 -> R: set(key, value)
+    C2 -> R: get(key)
+    R -> C2: value
+    C2 -> C2: caching(key)
+end
+
+newpage
+
+group if cache is hit on client side
+    C2 -> C2: check(key)
+    C2 -> C2: cache_hit(key)
+end
+
+newpage
+
+group if value is updated
+    C1 -> R: set(key, value)
+    R -> C2: notify(key)
+    C2 -> C2: invalidating(key)
+end
+
+newpage
+
+group if value is expired
+    R -> R: remove(key)
+    R -> C2: notify(key)
+    C2 -> C2: invalidating(key)
+end
+
+newpage
+
+group if value is removed
+    C1 -> R: remove(key)
+    R -> C2: notify(key)
+    C2 -> C2: invalidating(key)
+end
+
+@enduml
