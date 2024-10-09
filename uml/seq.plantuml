@@ -18,7 +18,7 @@ participant "ClientA" as C1
 participant "ClientB" as C2
 collections "Redis" as R
 
-group server assisted client side cache is used
+group local cache is used
     C1 -> R: set(key, value)
     C2 -> R: get(key)
     R -> C2: value
