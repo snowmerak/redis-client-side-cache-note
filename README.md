@@ -1,14 +1,16 @@
 # redis-client-side-cache-note
 
-## Redis Client Side Cache
+## Redis Client Side Cache 기본 구조
 
 - default mode: 서버는 특정 클라이언트가 어떤 키에 접근했는지 기억하고, 해당 키가 수정/삭제/만료되면 무효화 메시지를 전송합니다. 이는 서버 측에서 메모리를 소비하지만, 클라이언트가 메모리에 가지고 있을 가능성이 있는 키에 대해서만 무효화 메시지를 전송합니다.
 - broadcasting mode: 버는 특정 클라이언트가 어떤 키에 접근했는지 기억하려고 시도하지 않으므로, 서버 측에서 메모리를 전혀 소비하지 않습니다. 대신 클라이언트는 `object:` 또는 `user:`와 같은 키 접두사를 구독하고, 구독된 접두사와 일치하는 키가 변경될 때마다 알림 메시지를 수신합니다.
 
-| Mode | Memory | Network |
-|------|--------|---------|
-| default | high | low |
-| braodcasting | low | high |
+| Mode         | Memory | Network |
+|--------------|--------|---------|
+| default      | high   | low     |
+| broadcasting | low    | high    |
+
+각 트레이드 오프에 맞춰서 적절히 선택합니다.
 
 1. 클라이언트가 필요할 때, `Tracking` 명령을 사용하여 서버에게 특정 키를 추적하도록 요청합니다.
 2. 서버는 클라이언트가 읽기 명령을 수행한 건에 대해, 해당 키를 추적하도록 합니다.
